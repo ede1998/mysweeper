@@ -9,15 +9,53 @@ namespace MySweeper
     {
         public Minefield Minefield { get; }
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-
         public bool GameLost { get => this.Minefield.Any(x => x.MineExploded); }
 
         public Game()
         {
             this.Minefield = new Minefield();
         }
+
+        public void RevealAll()
+        {
+            foreach (var field in this.Minefield)
+            {
+                field.IsRevealed = true;
+            }
+        }
+
+        #region Playing
+
+        public void RevealField(Coordinate c)
+        {
+            var field = this.Minefield.GetValue(c);
+            field.IsRevealed = true;
+        }
+
+        public void RevealAdjacentFields(Coordinate c)
+        {
+            var nonExplosiveNeighbours = this.Minefield.GetNeighbours(c).Where(x => !x.BombMarked);
+            foreach (var neighbour in nonExplosiveNeighbours)
+            {
+                neighbour.IsRevealed = true;
+            }
+        }
+
+        public void MarkAsMine(Coordinate c)
+        {
+            var field = this.Minefield.GetValue(c);
+            field.BombMarked = true;
+        }
+
+        public void UnmarkMine(Coordinate c)
+        {
+            var field = this.Minefield.GetValue(c);
+            field.BombMarked = false;
+        }
+
+        #endregion Playing
+
+        #region OnStartup
 
         public void Initialize(int mineCount, int sizeX, int sizeY)
         {
@@ -27,22 +65,15 @@ namespace MySweeper
 
         private void InitializeMinefield(int mineCount, int sizeX, int sizeY)
         {
-            this.Minefield.EnsureCapacity(sizeX * sizeY);
-            this.Width = sizeX;
-            this.Height = sizeY;
+            this.Minefield.SetSize(sizeX, sizeY);
 
             var mines = GenerateMineLocations(mineCount, sizeX, sizeY);
-            this.Minefield.UnionWith(mines.Select(x => new Field(true, x)));
-
-            for (var i = 0; i < sizeX; i++)
+            foreach (var mine in mines)
             {
-                for (var j = 0; j < sizeY; j++)
-                {
-                    var field = new Field(false, new Coordinate(i, j));
-                    this.Minefield.Add(field);
-                }
+                this.Minefield.Add(new Field(true, mine));
             }
 
+            this.Minefield.Fill();
         }
 
         private List<Coordinate> GenerateMineLocations(int mineCount, int sizeX, int sizeY)
@@ -72,33 +103,13 @@ namespace MySweeper
         {
             foreach (var field in this.Minefield)
             {
-                var neighbourCoordinates = this.GetNeighbours(field.Coordinate);
-                var neighbours = this.Minefield.Where(x => neighbourCoordinates.Contains(x.Coordinate));
+                var neighbours = this.Minefield.GetNeighbours(field.Coordinate);
 
                 field.AdjacentMines = neighbours.Count(x => x.HasMine);
             }
         }
-
-        private IEnumerable<Coordinate> GetNeighbours(Coordinate coordinate)
-        {
-            var x = coordinate.X;
-            var y = coordinate.Y;
-
-            var neighbours = new List<Coordinate>(8)
-            {
-               new Coordinate(x - 1, y),
-               new Coordinate(x + 1, y),
-
-               new Coordinate(x - 1, y - 1),
-               new Coordinate(x,     y - 1),
-               new Coordinate(x + 1, y - 1),
-
-               new Coordinate(x - 1, y + 1),
-               new Coordinate(x,     y + 1),
-               new Coordinate(x + 1, y + 1),
-            };
-
-            return neighbours.Where(x => this.Minefield.Contains(coordinate));
-        }
     }
+
+    #endregion OnStartup
+
 }

@@ -5,7 +5,7 @@ using System;
 
 namespace MySweeper.InputOutput.Terminal
 {
-    public class CellFactory
+    class CellFactory
     {
         public Game Game { get; set; }
 
@@ -14,6 +14,11 @@ namespace MySweeper.InputOutput.Terminal
             var location = this.DetermineLocation(f.Coordinate);
 
             var cellString = cellDictionary[location];
+
+            if (f.MineExploded)
+            {
+                return cellString.Replace(Placeholder, Mine);
+            }
 
             if (f.IsRevealed)
             {
@@ -37,6 +42,7 @@ namespace MySweeper.InputOutput.Terminal
 
         private static char Flag => 'X';
         private static char Hidden => '?';
+        private static char Mine => 'M';
         private static char Placeholder => 'N';
 
         private Location DetermineLocation(Coordinate coordinate)
@@ -58,8 +64,8 @@ namespace MySweeper.InputOutput.Terminal
         private bool IsBottom(Coordinate c) => c.Y == this.MaxY && c.X != this.MaxX;
         private bool IsInner(Coordinate c) => 0 <= c.X && c.X < this.MaxX && 0 <= c.Y && c.Y < this.MaxY;
 
-        private int MaxX => this.Game.Width - 1;
-        private int MaxY => this.Game.Height - 1;
+        private int MaxX => this.Game.Minefield.Width - 1;
+        private int MaxY => this.Game.Minefield.Height - 1;
 
         private enum Location { Inner, Right, Top, Bottom, TopRight, BottomRight }
 

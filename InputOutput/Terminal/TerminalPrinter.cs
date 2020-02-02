@@ -6,7 +6,7 @@ using System;
 
 namespace MySweeper.InputOutput.Terminal
 {
-    public class TerminalInteractor : IReader, IPrinter
+    public class TerminalPrinter : IPrinter
     {
         private Game game;
 
@@ -15,7 +15,7 @@ namespace MySweeper.InputOutput.Terminal
             this.game = g;
         }
 
-        public void Print()
+        public void PrintMinefield()
         {
             var cellFactory = new CellFactory { Game = this.game };
             var printedMinefield = this.game.Minefield.ToDictionary(x => x.Coordinate, cellFactory.CreateCell);
@@ -29,11 +29,11 @@ namespace MySweeper.InputOutput.Terminal
         {
             var stringBuilder = new StringBuilder();
 
-            for (var i = 0; i < this.game.Height; i++)
+            for (var i = 0; i < this.game.Minefield.Height; i++)
             {
                 for (int k = 0; k < cellFactory.GetCellHeight(i); k++)
                 {
-                    for (var j = 0; j < this.game.Width; j++)
+                    for (var j = 0; j < this.game.Minefield.Width; j++)
                     {
                         var cell = printedMinefield[new Coordinate(j, i)];
                         var rowsOfCell = cell.Split(Environment.NewLine);
@@ -50,9 +50,11 @@ namespace MySweeper.InputOutput.Terminal
             return stringBuilder.ToString();
         }
 
-        public Coordinate Read()
+        public void PrintGameOver()
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("========================== Game over ==========================");
+            this.PrintMinefield();
+            Console.WriteLine("========================== Game over ==========================");
         }
     }
 }

@@ -4,6 +4,7 @@ namespace MySweeper.InputOutput
 {
     public interface IReader
     {
-        Coordinate Read();
+        GameInput ReadGameInput();
+        InitializationInput ReadInitializationInput();
     }
 }

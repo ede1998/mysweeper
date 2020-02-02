@@ -4,6 +4,8 @@ namespace MySweeper.InputOutput
     {
         void SetGame(Game g);
 
-        void Print();
+        void PrintMinefield();
+
+        void PrintGameOver();
     }
 }
