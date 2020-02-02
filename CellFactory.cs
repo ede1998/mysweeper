@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System;
-using System.Linq;
 
 public class CellFactory
 {
@@ -14,10 +13,10 @@ public class CellFactory
 
         if (f.IsRevealed)
         {
-            return cellString;
+            return cellString.Replace(Placeholder, f.AdjacentMines.ToString()[0]);
         }
 
-        if(false) // IsMarked
+        if(f.BombMarked)
         {
             return cellString.Replace(Placeholder, Flag);
         }

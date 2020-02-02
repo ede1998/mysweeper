@@ -15,7 +15,7 @@ public class TerminalInteractor : IReader, IPrinter
     public void Print()
     {
         var cellFactory = new CellFactory { Game = this.game };
-        var printedMinefield = this.game.Minefield.Values.ToDictionary(x => x.Coordinate, cellFactory.CreateCell);
+        var printedMinefield = this.game.Minefield.ToDictionary(x => x.Coordinate, cellFactory.CreateCell);
 
         var lineByLineMinefield = ConvertMinefieldToString(printedMinefield, cellFactory);
 

@@ -2,7 +2,8 @@
 public class Field
 {
     public Coordinate Coordinate { get; }
-
+    public bool HasMine { get; }
+    public bool BombMarked { get; set; }
     public bool IsRevealed {
         get => this.isRevealed;
         set {
@@ -13,19 +14,21 @@ public class Field
         }
     }
 
-    public bool MineExploded { get => isRevealed && hasMine; }
+    public int AdjacentMines { get; set; }
+
+    public bool MineExploded => isRevealed && HasMine;
     
     private bool isRevealed;
-    private bool hasMine;
 
     public Field(bool hasMine, Coordinate coordinate)
     {
-        this.hasMine = hasMine;
+        this.HasMine = hasMine;
         this.Coordinate = coordinate;
+        this.BombMarked = false;
     }
 
     public override string ToString()
     {
-        return $"Coordinate: [{this.Coordinate}], HasMine: [{this.hasMine}]";
+        return $"Coordinate: [{this.Coordinate}], HasMine: [{this.HasMine}]";
     }
 }

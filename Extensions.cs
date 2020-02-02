@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-static class Extensions
+public static class Extensions
 {
     public static bool AnyOf<T>(this T item, params T[] set)
     {
