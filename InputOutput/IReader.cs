@@ -1,5 +1,9 @@
+using MySweeper.Basic;
 
-public interface IReader
+namespace MySweeper.InputOutput
 {
-    Coordinate Read();
+    public interface IReader
+    {
+        Coordinate Read();
+    }
 }

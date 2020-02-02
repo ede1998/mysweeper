@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MySweeper.InputOutput.Terminal;
+using System;
 
-namespace mysweeper
+namespace MySweeper
 {
     class Program
     {

@@ -1,14 +1,17 @@
 using System;
 using System.Linq;
 
-public static class Extensions
+namespace MySweeper.Helper
 {
-    public static bool AnyOf<T>(this T item, params T[] set)
+    public static class Extensions
     {
-        if (set == null)
-            throw new ArgumentNullException(nameof(set));
+        public static bool AnyOf<T>(this T item, params T[] set)
+        {
+            if (set == null)
+                throw new ArgumentNullException(nameof(set));
 
-        return set.Contains(item);
+            return set.Contains(item);
+        }
+
     }
-
 }

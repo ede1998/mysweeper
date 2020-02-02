@@ -1,25 +1,28 @@
 using System.Collections.Generic;
 
-public class FieldComparer : IEqualityComparer<Field>
+namespace MySweeper.Basic
 {
-    public bool Equals(Field x, Field y)
+    public class FieldComparer : IEqualityComparer<Field>
     {
-        if (x == null ^ y == null)
+        public bool Equals(Field x, Field y)
         {
-            return false;
+            if (x == null ^ y == null)
+            {
+                return false;
+            }
+
+            return x?.Coordinate == y?.Coordinate;
         }
 
-        return x?.Coordinate == y?.Coordinate;
-    }
 
-
-    public int GetHashCode(Field f)
-    {
-        if(f == null)
+        public int GetHashCode(Field f)
         {
-            return 0;
-        }
+            if (f == null)
+            {
+                return 0;
+            }
 
-        return f.Coordinate.GetHashCode();
+            return f.Coordinate.GetHashCode();
+        }
     }
 }

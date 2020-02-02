@@ -1,7 +1,9 @@
-
-public interface IPrinter
+namespace MySweeper.InputOutput
 {
-    void SetGame(Game g);
+    public interface IPrinter
+    {
+        void SetGame(Game g);
 
-    void Print();
+        void Print();
+    }
 }

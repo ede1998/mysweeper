@@ -1,34 +1,38 @@
-
-public class Field
+namespace MySweeper.Basic
 {
-    public Coordinate Coordinate { get; }
-    public bool HasMine { get; }
-    public bool BombMarked { get; set; }
-    public bool IsRevealed {
-        get => this.isRevealed;
-        set {
-            if (!this.isRevealed)
+    public class Field
+    {
+        public Coordinate Coordinate { get; }
+        public bool HasMine { get; }
+        public bool BombMarked { get; set; }
+        public bool IsRevealed
+        {
+            get => this.isRevealed;
+            set
             {
-                this.isRevealed = true;
+                if (!this.isRevealed)
+                {
+                    this.isRevealed = true;
+                }
             }
         }
-    }
 
-    public int AdjacentMines { get; set; }
+        public int AdjacentMines { get; set; }
 
-    public bool MineExploded => isRevealed && HasMine;
-    
-    private bool isRevealed;
+        public bool MineExploded => isRevealed && HasMine;
 
-    public Field(bool hasMine, Coordinate coordinate)
-    {
-        this.HasMine = hasMine;
-        this.Coordinate = coordinate;
-        this.BombMarked = false;
-    }
+        private bool isRevealed;
 
-    public override string ToString()
-    {
-        return $"Coordinate: [{this.Coordinate}], HasMine: [{this.HasMine}]";
+        public Field(bool hasMine, Coordinate coordinate)
+        {
+            this.HasMine = hasMine;
+            this.Coordinate = coordinate;
+            this.BombMarked = false;
+        }
+
+        public override string ToString()
+        {
+            return $"Coordinate: [{this.Coordinate}], HasMine: [{this.HasMine}]";
+        }
     }
 }
