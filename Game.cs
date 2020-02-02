@@ -6,6 +6,11 @@ public class Game
 {
     public Dictionary<Coordinate, Field> Minefield { get; }
 
+    public int Width { get; private set; }
+    public int Height { get; private set; }
+
+    public bool GameLost { get => this.Minefield.Any(x => x.Value.MineExploded); }
+
     public Game()
     {
         this.Minefield = new Dictionary<Coordinate, Field>();
@@ -14,6 +19,8 @@ public class Game
     public void Initialize(int mineCount, int sizeX, int sizeY)
     {
         this.Minefield.EnsureCapacity(sizeX*sizeY);
+        this.Width = sizeX;
+        this.Height = sizeY;
 
         var mines = GenerateMineLocations(mineCount, sizeX, sizeY);
         foreach (var mine in mines)

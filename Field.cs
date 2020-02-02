@@ -3,16 +3,29 @@ public class Field
 {
     public Coordinate Coordinate { get; }
 
-    private bool HasMine { get; set; }
+    public bool IsRevealed {
+        get => this.isRevealed;
+        set {
+            if (!this.isRevealed)
+            {
+                this.isRevealed = true;
+            }
+        }
+    }
+
+    public bool MineExploded { get => isRevealed && hasMine; }
+    
+    private bool isRevealed;
+    private bool hasMine;
 
     public Field(bool hasMine, Coordinate coordinate)
     {
-        this.HasMine = hasMine;
+        this.hasMine = hasMine;
         this.Coordinate = coordinate;
     }
 
     public override string ToString()
     {
-        return $"Coordinate: [{this.Coordinate}], HasMine: [{this.HasMine}]";
+        return $"Coordinate: [{this.Coordinate}], HasMine: [{this.hasMine}]";
     }
 }

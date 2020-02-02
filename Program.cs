@@ -10,7 +10,10 @@ namespace mysweeper
 
             var game = new Game();
             game.Initialize(10,10,10);
-            Console.WriteLine("[{0}]", string.Join(',', game.Minefield));
+            //Console.WriteLine("[{0}]", string.Join(',', game.Minefield));
+            var terminalInteractor = new TerminalInteractor();
+            terminalInteractor.SetGame(game);
+            terminalInteractor.Print();
         }
     }
 }
