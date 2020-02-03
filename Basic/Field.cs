@@ -4,7 +4,18 @@ namespace MySweeper.Basic
     {
         public Coordinate Coordinate { get; }
         public bool HasMine { get; }
-        public bool BombMarked { get; set; }
+        public bool BombMarked
+        {
+            get => this.bombMarked;
+            set
+            {
+                if (this.isRevealed)
+                {
+                    return;
+                }
+                this.bombMarked = value;
+            }
+        }
         public bool IsRevealed
         {
             get => this.isRevealed;
@@ -13,6 +24,7 @@ namespace MySweeper.Basic
                 if (!this.isRevealed)
                 {
                     this.isRevealed = true;
+                    this.BombMarked = false;
                 }
             }
         }
@@ -22,6 +34,7 @@ namespace MySweeper.Basic
         public bool MineExploded => isRevealed && HasMine;
 
         private bool isRevealed;
+        private bool bombMarked;
 
         public Field(bool hasMine, Coordinate coordinate)
         {

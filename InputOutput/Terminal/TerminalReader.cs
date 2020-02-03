@@ -7,11 +7,14 @@ namespace MySweeper.InputOutput.Terminal
 {
     public class TerminalReader : IReader
     {
+        public Minefield Minefield { get; set; }
+
         public GameInput ReadGameInput()
         {
             while (true)
             {
-                Console.Write("Action (h for help): ");
+                var flagsRemaining = this.Minefield.MineCount - this.Minefield.MarkerCount;
+                Console.Write($"Action (h for help, {flagsRemaining} flags): ");
                 var input = Console.ReadLine();
                 var match = Regex.Match(input, @"^h$");
                 if (match.Success)

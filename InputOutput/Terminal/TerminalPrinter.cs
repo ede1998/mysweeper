@@ -8,17 +8,12 @@ namespace MySweeper.InputOutput.Terminal
 {
     public class TerminalPrinter : IPrinter
     {
-        private Game game;
-
-        public void SetGame(Game g)
-        {
-            this.game = g;
-        }
+        public Minefield Minefield { get; set; }
 
         public void PrintMinefield()
         {
-            var cellFactory = new CellFactory { Game = this.game };
-            var printedMinefield = this.game.Minefield.ToDictionary(x => x.Coordinate, cellFactory.CreateCell);
+            var cellFactory = new CellFactory { Minefield = this.Minefield };
+            var printedMinefield = this.Minefield.ToDictionary(x => x.Coordinate, cellFactory.CreateCell);
 
             var lineByLineMinefield = ConvertMinefieldToString(printedMinefield, cellFactory);
 
@@ -29,11 +24,11 @@ namespace MySweeper.InputOutput.Terminal
         {
             var stringBuilder = new StringBuilder();
 
-            for (var i = 0; i < this.game.Minefield.Height; i++)
+            for (var i = 0; i < this.Minefield.Height; i++)
             {
                 for (int k = 0; k < cellFactory.GetCellHeight(i); k++)
                 {
-                    for (var j = 0; j < this.game.Minefield.Width; j++)
+                    for (var j = 0; j < this.Minefield.Width; j++)
                     {
                         var cell = printedMinefield[new Coordinate(j, i)];
                         var rowsOfCell = cell.Split(Environment.NewLine);
@@ -50,11 +45,17 @@ namespace MySweeper.InputOutput.Terminal
             return stringBuilder.ToString();
         }
 
-        public void PrintGameOver()
+        public void PrintGameLost()
         {
             Console.WriteLine("========================== Game over ==========================");
             this.PrintMinefield();
             Console.WriteLine("========================== Game over ==========================");
+        }
+
+        public void PrintGameWon()
+        {
+            this.PrintMinefield();
+            Console.WriteLine("Congratulations. You won the game.");
         }
     }
 }

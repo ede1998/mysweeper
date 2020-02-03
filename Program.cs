@@ -9,11 +9,13 @@ namespace MySweeper
         {
             var game = new Game();
             var io = new Terminal();
+
             var init = io.TerminalReader.ReadInitializationInput();
+
             game.Initialize(init.MineCount, init.Width, init.Height);
-            //Console.WriteLine("[{0}]", string.Join(',', game.Minefield));
-            io.TerminalPrinter.SetGame(game);
-            while (!game.GameLost)
+            io.Initialize(game.Minefield);
+
+            while (!game.GameLost && !game.GameWon)
             {
                 io.TerminalPrinter.PrintMinefield();
                 var input = io.TerminalReader.ReadGameInput();
@@ -22,21 +24,28 @@ namespace MySweeper
                 {
                     case Action.MarkAsMine:
                         game.MarkAsMine(input.Coordinate);
-                    break;
+                        break;
                     case Action.UnmarkMine:
                         game.UnmarkMine(input.Coordinate);
-                    break;
+                        break;
                     case Action.RevealAdjacent:
                         game.RevealAdjacentFields(input.Coordinate);
-                    break;
+                        break;
                     case Action.RevealField:
                         game.RevealField(input.Coordinate);
-                    break;
+                        break;
                 }
             }
 
-            game.RevealAll();
-            io.TerminalPrinter.PrintGameOver();
+            if (game.GameWon)
+            {
+                io.TerminalPrinter.PrintGameWon();
+            }
+            else if (game.GameLost)
+            {
+                game.RevealAll();
+                io.TerminalPrinter.PrintGameLost();
+            }
         }
     }
 }

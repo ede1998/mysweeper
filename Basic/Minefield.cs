@@ -8,6 +8,9 @@ namespace MySweeper.Basic
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        public int MineCount => this.Count(x => x.HasMine);
+        public int MarkerCount => this.Count(x => x.BombMarked);
+
         public Minefield()
         : base(new FieldComparer())
         {

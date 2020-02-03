@@ -7,7 +7,7 @@ namespace MySweeper.InputOutput.Terminal
 {
     class CellFactory
     {
-        public Game Game { get; set; }
+        public Minefield Minefield { get; set; }
 
         public string CreateCell(Field f)
         {
@@ -64,8 +64,8 @@ namespace MySweeper.InputOutput.Terminal
         private bool IsBottom(Coordinate c) => c.Y == this.MaxY && c.X != this.MaxX;
         private bool IsInner(Coordinate c) => 0 <= c.X && c.X < this.MaxX && 0 <= c.Y && c.Y < this.MaxY;
 
-        private int MaxX => this.Game.Minefield.Width - 1;
-        private int MaxY => this.Game.Minefield.Height - 1;
+        private int MaxX => this.Minefield.Width - 1;
+        private int MaxY => this.Minefield.Height - 1;
 
         private enum Location { Inner, Right, Top, Bottom, TopRight, BottomRight }
 

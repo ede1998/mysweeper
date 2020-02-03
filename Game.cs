@@ -9,7 +9,8 @@ namespace MySweeper
     {
         public Minefield Minefield { get; }
 
-        public bool GameLost { get => this.Minefield.Any(x => x.MineExploded); }
+        public bool GameLost => this.Minefield.Any(x => x.MineExploded);
+        public bool GameWon => this.Minefield.All(x => (x.BombMarked && x.HasMine) ^ x.IsRevealed);
 
         public Game()
         {
@@ -30,6 +31,7 @@ namespace MySweeper
         {
             var field = this.Minefield.GetValue(c);
             field.IsRevealed = true;
+            this.RevealNonExplosiveNeighbourhoods();
         }
 
         public void RevealAdjacentFields(Coordinate c)
@@ -38,6 +40,7 @@ namespace MySweeper
             foreach (var neighbour in nonExplosiveNeighbours)
             {
                 neighbour.IsRevealed = true;
+                this.RevealNonExplosiveNeighbourhoods();
             }
         }
 
@@ -51,6 +54,25 @@ namespace MySweeper
         {
             var field = this.Minefield.GetValue(c);
             field.BombMarked = false;
+        }
+
+        private void RevealNonExplosiveNeighbourhoods()
+        {
+            var minefieldModified = true;
+            while (minefieldModified)
+            {
+                minefieldModified = false;
+                var fieldsInNonExplosiveNeighbourhood = this.Minefield.Where(x => x.AdjacentMines == 0 && x.IsRevealed);
+                var nonExplosiveFields = fieldsInNonExplosiveNeighbourhood
+                                            .SelectMany(x => this.Minefield.GetNeighbours(x.Coordinate))
+                                            .Where(x => !x.IsRevealed);
+
+                foreach (var field in nonExplosiveFields)
+                {
+                    field.IsRevealed = true;
+                    minefieldModified = true;
+                }
+            }
         }
 
         #endregion Playing

@@ -1,11 +1,15 @@
+using MySweeper.Basic;
+
 namespace MySweeper.InputOutput
 {
     public interface IPrinter
     {
-        void SetGame(Game g);
+        Minefield Minefield { get; set; }
 
         void PrintMinefield();
 
-        void PrintGameOver();
+        void PrintGameLost();
+
+        void PrintGameWon();
     }
 }
