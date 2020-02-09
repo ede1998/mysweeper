@@ -17,6 +17,7 @@ namespace MySweeper
         public Game()
         {
             this.Minefield = new Minefield();
+            this.ExecutedCommands = new List<ICommand>();
         }
 
         public void RevealAll()

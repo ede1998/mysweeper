@@ -21,47 +21,58 @@ namespace MySweeper.InputOutput.Terminal
                 {"r", this.CommandFactory.CreateRevealFieldCommand},
                 {"a", this.CommandFactory.CreateRevealAdjacentFieldCommand},
                 {"m", this.CommandFactory.CreateMarkAsMineCommand},
-                {"u", this.CommandFactory.CreateUnmarkMineCommand}
+                {"u", this.CommandFactory.CreateUnmarkMineCommand},
+                {"h", PrintHelp},
+                {"q", ExitApplication}
             };
         }
 
-        private static ICommand Test(Coordinate c)
-        {
-            return null;
-        }
         public ICommand ReadGameInput()
         {
-            while (true)
+            ICommand command;
+            do
             {
                 var flagsRemaining = this.Minefield.MineCount - this.Minefield.MarkerCount;
                 Console.Write($"Action (h for help, {flagsRemaining} flags): ");
                 var input = Console.ReadLine();
-                var match = Regex.Match(input, @"^h$");
-                if (match.Success)
-                {
-                    this.PrintHelp();
-                    continue;
-                }
 
-                match = Regex.Match(input, @"^q$");
-                if (match.Success)
-                {
-                    Environment.Exit(0);
-                }
+                var commandString = ParseCommand(input);
+                Console.WriteLine(commandString);
 
-                match = Regex.Match(input, @"^([umra])\s*(\d+)\s*(\d+)$");
-                if (match.Success)
-                {
-                    var x = int.Parse(match.Groups[2].Value);
-                    var y = int.Parse(match.Groups[3].Value);
-                    var coordinate = new Coordinate(x, y);
-                    var commandString = match.Groups[1].Value;
-                    return this.StringToAction[commandString](coordinate);
-                }
+                var argument = ParseArguments(input) ?? new Coordinate(-1, -1);
+
+                command = this.StringToAction[commandString](argument);
             }
+            while(command == null);
+            return command;
+        }
+        
+        private static string ParseCommand(string input)
+        {
+            var match = Regex.Match(input, @"^([umrahq])\s*");
+            return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
-        private void PrintHelp()
+        private static Coordinate? ParseArguments(string input)
+        {
+            var match = Regex.Match(input, @"\s+(\d+)\s+(\d+)$");
+            if (match.Success)
+            {
+                var x = int.Parse(match.Groups[1].Value);
+                var y = int.Parse(match.Groups[2].Value);
+                var coordinate = new Coordinate(x, y);
+                return coordinate;
+            }
+            return null;
+        }
+
+        private static ICommand ExitApplication(Coordinate _)
+        {
+            Environment.Exit(0);
+            return null;
+        }
+
+        private static ICommand PrintHelp(Coordinate _)
         {
             Console.WriteLine("Help:");
             Console.WriteLine("h     - Print this help text.");
@@ -70,7 +81,10 @@ namespace MySweeper.InputOutput.Terminal
             Console.WriteLine("m x y - Mark field on location (x,y) as a mine.");
             Console.WriteLine("u x y - Remove mine marker from location (x,y).");
             Console.WriteLine("q     - Quit the game.");
+            return null;
         }
+
+        #region Initialization
 
         public InitializationInput ReadInitializationInput()
         {
@@ -114,5 +128,7 @@ namespace MySweeper.InputOutput.Terminal
 
             return mineCount;
         }
+
+        #endregion Initialization
     }
 }
