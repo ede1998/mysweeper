@@ -1,5 +1,4 @@
 ﻿using MySweeper.InputOutput.Terminal;
-using MySweeper.InputOutput;
 
 namespace MySweeper
 {
@@ -19,22 +18,7 @@ namespace MySweeper
             {
                 io.TerminalPrinter.PrintMinefield();
                 var input = io.TerminalReader.ReadGameInput();
-
-                switch (input.Action)
-                {
-                    case Action.MarkAsMine:
-                        game.MarkAsMine(input.Coordinate);
-                        break;
-                    case Action.UnmarkMine:
-                        game.UnmarkMine(input.Coordinate);
-                        break;
-                    case Action.RevealAdjacent:
-                        game.RevealAdjacentFields(input.Coordinate);
-                        break;
-                    case Action.RevealField:
-                        game.RevealField(input.Coordinate);
-                        break;
-                }
+                game.Execute(input);
             }
 
             if (game.GameWon)

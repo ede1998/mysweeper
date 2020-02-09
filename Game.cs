@@ -1,4 +1,5 @@
 using MySweeper.Basic;
+using MySweeper.InputOutput.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -8,6 +9,7 @@ namespace MySweeper
     public class Game
     {
         public Minefield Minefield { get; }
+        public List<ICommand> ExecutedCommands { get; }
 
         public bool GameLost => this.Minefield.Any(x => x.MineExploded);
         public bool GameWon => this.Minefield.All(x => (x.BombMarked && x.HasMine) ^ x.IsRevealed);
@@ -24,55 +26,13 @@ namespace MySweeper
                 field.IsRevealed = true;
             }
         }
-
+        
         #region Playing
 
-        public void RevealField(Coordinate c)
+        public void Execute(ICommand command)
         {
-            var field = this.Minefield.GetValue(c);
-            field.IsRevealed = true;
-            this.RevealNonExplosiveNeighbourhoods();
-        }
-
-        public void RevealAdjacentFields(Coordinate c)
-        {
-            var nonExplosiveNeighbours = this.Minefield.GetNeighbours(c).Where(x => !x.BombMarked);
-            foreach (var neighbour in nonExplosiveNeighbours)
-            {
-                neighbour.IsRevealed = true;
-                this.RevealNonExplosiveNeighbourhoods();
-            }
-        }
-
-        public void MarkAsMine(Coordinate c)
-        {
-            var field = this.Minefield.GetValue(c);
-            field.BombMarked = true;
-        }
-
-        public void UnmarkMine(Coordinate c)
-        {
-            var field = this.Minefield.GetValue(c);
-            field.BombMarked = false;
-        }
-
-        private void RevealNonExplosiveNeighbourhoods()
-        {
-            var minefieldModified = true;
-            while (minefieldModified)
-            {
-                minefieldModified = false;
-                var fieldsInNonExplosiveNeighbourhood = this.Minefield.Where(x => x.AdjacentMines == 0 && x.IsRevealed);
-                var nonExplosiveFields = fieldsInNonExplosiveNeighbourhood
-                                            .SelectMany(x => this.Minefield.GetNeighbours(x.Coordinate))
-                                            .Where(x => !x.IsRevealed);
-
-                foreach (var field in nonExplosiveFields)
-                {
-                    field.IsRevealed = true;
-                    minefieldModified = true;
-                }
-            }
+            this.ExecutedCommands.Add(command);
+            command.Execute();
         }
 
         #endregion Playing

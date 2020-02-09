@@ -1,15 +1,35 @@
-using System.Net.Mime;
-using System.Text.RegularExpressions;
 using MySweeper.Basic;
+using MySweeper.InputOutput.Commands;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System;
 
 namespace MySweeper.InputOutput.Terminal
 {
     public class TerminalReader : IReader
     {
-        public Minefield Minefield { get; set; }
+        private Minefield Minefield;
+        private CommandFactory CommandFactory;
+        private Dictionary<string, Func<Coordinate, ICommand>> StringToAction;
 
-        public GameInput ReadGameInput()
+        public void Initialize(Minefield minefield, CommandFactory commandFactory)
+        {
+            this.Minefield = minefield;
+            this.CommandFactory = commandFactory;
+            this.StringToAction = new Dictionary<string, Func<Coordinate, ICommand>>
+            {
+                {"r", this.CommandFactory.CreateRevealFieldCommand},
+                {"a", this.CommandFactory.CreateRevealAdjacentFieldCommand},
+                {"m", this.CommandFactory.CreateMarkAsMineCommand},
+                {"u", this.CommandFactory.CreateUnmarkMineCommand}
+            };
+        }
+
+        private static ICommand Test(Coordinate c)
+        {
+            return null;
+        }
+        public ICommand ReadGameInput()
         {
             while (true)
             {
@@ -34,17 +54,9 @@ namespace MySweeper.InputOutput.Terminal
                 {
                     var x = int.Parse(match.Groups[2].Value);
                     var y = int.Parse(match.Groups[3].Value);
-                    switch (match.Groups[1].Value)
-                    {
-                        case "r":
-                            return new GameInput { Action = Action.RevealField, Coordinate = new Coordinate(x, y) };
-                        case "a":
-                            return new GameInput { Action = Action.RevealAdjacent, Coordinate = new Coordinate(x, y) };
-                        case "m":
-                            return new GameInput { Action = Action.MarkAsMine, Coordinate = new Coordinate(x, y) };
-                        case "u":
-                            return new GameInput { Action = Action.UnmarkMine, Coordinate = new Coordinate(x, y) };
-                    }
+                    var coordinate = new Coordinate(x, y);
+                    var commandString = match.Groups[1].Value;
+                    return this.StringToAction[commandString](coordinate);
                 }
             }
         }

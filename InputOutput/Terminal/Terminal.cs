@@ -1,5 +1,6 @@
 using System;
 using MySweeper.Basic;
+using MySweeper.InputOutput.Commands;
 
 namespace MySweeper.InputOutput.Terminal
 {
@@ -22,7 +23,8 @@ namespace MySweeper.InputOutput.Terminal
             }
 
             this.TerminalPrinter.Minefield = minefield;
-            this.TerminalReader.Minefield = minefield;
+            var commandFactory = new CommandFactory(minefield);
+            this.TerminalReader.Initialize(minefield, commandFactory);
         }
     }
 }
