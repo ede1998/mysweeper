@@ -1,8 +1,10 @@
 using MySweeper.Basic;
 using MySweeper.InputOutput.Commands;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System;
+using MySweeper.Solver;
 
 namespace MySweeper.InputOutput.Terminal
 {
@@ -19,7 +21,7 @@ namespace MySweeper.InputOutput.Terminal
             this.StringToAction = new Dictionary<string, Func<Coordinate, ICommand>>
             {
                 {"r", this.CommandFactory.CreateRevealFieldCommand},
-                {"a", this.CommandFactory.CreateRevealAdjacentFieldCommand},
+                {"a", this.CommandFactory.CreateRevealAdjacentFieldsCommand},
                 {"m", this.CommandFactory.CreateMarkAsMineCommand},
                 {"u", this.CommandFactory.CreateUnmarkMineCommand},
                 {"h", PrintHelp},
@@ -43,7 +45,7 @@ namespace MySweeper.InputOutput.Terminal
                     return null;
                 }
 
-                var commandString = ParseCommand(input);
+                var commandString = this.ParseCommand(input);
                 Console.WriteLine(commandString);
 
                 var argument = ParseArguments(input) ?? new Coordinate(-1, -1);
@@ -55,9 +57,11 @@ namespace MySweeper.InputOutput.Terminal
             return command;
         }
         
-        private static string ParseCommand(string input)
+        private string ParseCommand(string input)
         {
-            var match = Regex.Match(input, @"^([umrahq])\s*");
+            var commands = string.Join("", this.StringToAction.Keys.ToList());
+            var regexString = @$"^([{commands}])\s*";
+            var match = Regex.Match(input, regexString);
             return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
@@ -101,8 +105,15 @@ namespace MySweeper.InputOutput.Terminal
             Console.WriteLine("MySweeper");
             var (width, height) = this.GetDimensions();
             var mineCount = this.GetMineCount();
+            var useSolver = this.GetUseSolver();
 
-            return new InitializationInput { Width = width, Height = height, MineCount = mineCount };
+            return new InitializationInput
+            {
+                Width = width,
+                Height = height,
+                MineCount = mineCount,
+                UseSolver = useSolver
+            };
         }
 
         private Tuple<int, int> GetDimensions()
@@ -140,6 +151,25 @@ namespace MySweeper.InputOutput.Terminal
             while (!int.TryParse(input, out mineCount));
 
             return mineCount;
+        }
+
+        private bool GetUseSolver()
+        {
+            string input;
+            bool useSolver;
+            do
+            {
+                Console.WriteLine("Should the minefield be cleared automatically?");
+                input = Console.ReadLine();
+            }
+            while (!bool.TryParse(input, out useSolver));
+
+            if (useSolver)
+            {
+                Console.WriteLine("Going to use solver.");
+            }
+
+            return useSolver;
         }
 
         #endregion Initialization

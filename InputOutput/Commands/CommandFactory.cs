@@ -16,10 +16,10 @@ namespace MySweeper.InputOutput.Commands
             return new MarkAsMineCommand(this.Minefield, coordinate);
         }
 
-        public ICommand CreateRevealAdjacentFieldCommand(Coordinate coordinate)
+        public ICommand CreateRevealAdjacentFieldsCommand(Coordinate coordinate)
         {
             if (this.CoordinateOutOfBounds(coordinate)) return null;
-            return new RevealAdjacentFieldCommand(this.Minefield, coordinate);
+            return new RevealAdjacentFieldsCommand(this.Minefield, coordinate);
         }
 
         public ICommand CreateRevealFieldCommand(Coordinate coordinate)

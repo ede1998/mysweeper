@@ -3,9 +3,9 @@ using MySweeper.Basic;
 
 namespace MySweeper.InputOutput.Commands
 {
-    public class RevealAdjacentFieldCommand : AbstractRevealCommand
+    public class RevealAdjacentFieldsCommand : AbstractRevealCommand
     {
-        public RevealAdjacentFieldCommand(Minefield minefield, Coordinate coordinate)
+        public RevealAdjacentFieldsCommand(Minefield minefield, Coordinate coordinate)
         : base(minefield, coordinate)
         {
         }

@@ -1,4 +1,6 @@
-﻿using MySweeper.InputOutput.Terminal;
+﻿using MySweeper.InputOutput.Commands;
+using MySweeper.InputOutput.Terminal;
+using MySweeper.Solver;
 
 namespace MySweeper
 {
@@ -13,6 +15,20 @@ namespace MySweeper
 
             game.Initialize(init.MineCount, init.Width, init.Height);
             io.Initialize(game.Minefield);
+
+            if (init.UseSolver)
+            {
+                var solvers = new SolverSequence
+                {
+                    new StartSolver(),
+                    new BasicMineMarkerSolver(),
+                    new BasicFieldRevealerSolver(),
+                    new BasicMineMarkerSolver(),
+                    new BasicFieldRevealerSolver(),
+                };
+                solvers.SetCommandFactory(new CommandFactory(game.Minefield));
+                solvers.Solve(game);
+            }
 
             while (!game.GameLost && !game.GameWon)
             {

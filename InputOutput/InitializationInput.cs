@@ -7,5 +7,6 @@ namespace MySweeper.InputOutput
         public int Width;
         public int Height;
         public int MineCount;
+        public bool UseSolver;
     }
 }
