@@ -2,7 +2,7 @@ using MySweeper.Basic;
 
 namespace MySweeper.InputOutput
 {
-    public struct InitializationInput
+    public class InitializationInput
     {
         public int Width;
         public int Height;

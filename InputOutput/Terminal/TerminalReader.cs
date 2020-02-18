@@ -27,21 +27,29 @@ namespace MySweeper.InputOutput.Terminal
             };
         }
 
+        #region Playing
+
         public ICommand ReadGameInput()
         {
-            ICommand command;
+            ICommand command = null;
             do
             {
                 var flagsRemaining = this.Minefield.MineCount - this.Minefield.MarkerCount;
                 Console.Write($"Action (h for help, {flagsRemaining} flags): ");
                 var input = Console.ReadLine();
 
+                if (input == null)
+                {
+                    return null;
+                }
+
                 var commandString = ParseCommand(input);
                 Console.WriteLine(commandString);
 
                 var argument = ParseArguments(input) ?? new Coordinate(-1, -1);
 
-                command = this.StringToAction[commandString](argument);
+                if (this.StringToAction.ContainsKey(commandString))
+                    command = this.StringToAction[commandString](argument);
             }
             while(command == null);
             return command;
@@ -84,6 +92,8 @@ namespace MySweeper.InputOutput.Terminal
             return null;
         }
 
+        #endregion Playing
+
         #region Initialization
 
         public InitializationInput ReadInitializationInput()
@@ -97,16 +107,19 @@ namespace MySweeper.InputOutput.Terminal
 
         private Tuple<int, int> GetDimensions()
         {
-            Match match;
+            Match match = null;
             do
             {
                 Console.WriteLine("How large should the mine field be?");
                 Console.Write("Width x Height: ");
                 var input = Console.ReadLine();
 
-                match = Regex.Match(input, @"^(\d+)\s*[x,]*\s*(\d+)$");
+                if (input != null)
+                {
+                    match = Regex.Match(input, @"^(\d+)\s*[x,]*\s*(\d+)$");
+                }
             }
-            while (!match.Success);
+            while (match == null || !match.Success);
 
             var width = int.Parse(match.Groups[1].Value);
             var height = int.Parse(match.Groups[2].Value);

@@ -18,6 +18,12 @@ namespace MySweeper
             {
                 io.TerminalPrinter.PrintMinefield();
                 var input = io.TerminalReader.ReadGameInput();
+
+                if (input == null)
+                {
+                    break;
+                }
+
                 game.Execute(input);
             }
 
