@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace MySweeper.Helper
 {
@@ -13,5 +14,14 @@ namespace MySweeper.Helper
             return set.Contains(item);
         }
 
+        public static IEnumerable<Tuple<int, T>> Enumerate<T>(this IEnumerable<T> source)
+        {
+            int i = -1;
+            foreach (var item in source)
+            {
+                ++i;
+                yield return Tuple.Create(i, item);
+            }
+        }
     }
 }
