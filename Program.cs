@@ -1,13 +1,16 @@
 ﻿using MySweeper.InputOutput.Commands;
 using MySweeper.InputOutput.Terminal;
 using MySweeper.Solver;
+using log4net;
 
 namespace MySweeper
 {
     class Program
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(Program));
         static void Main(string[] args)
         {
+            Logger.Debug("MySweeper started");
             var game = new Game();
             var io = new Terminal();
 

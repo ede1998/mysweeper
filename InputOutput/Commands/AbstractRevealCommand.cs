@@ -1,11 +1,13 @@
-using System.Linq;
-using System.Collections.Generic;
 using MySweeper.Basic;
+using System.Collections.Generic;
+using System.Linq;
+using log4net;
 
 namespace MySweeper.InputOutput.Commands
 {
     public abstract class AbstractRevealCommand : AbstractCommand
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(AbstractRevealCommand));
         public AbstractRevealCommand(Minefield minefield, Coordinate coordinate)
         : base(minefield, coordinate)
         {
@@ -16,6 +18,7 @@ namespace MySweeper.InputOutput.Commands
 
         public override void UndoExecution()
         {
+            Logger.DebugFormat("Undo revealing of [{0}].", string.Join(",", this.RevealedCoordinates));
             foreach (var revealedCoordinate in this.RevealedCoordinates)
             {
                 this.Minefield.GetValue(revealedCoordinate).IsRevealed = false;

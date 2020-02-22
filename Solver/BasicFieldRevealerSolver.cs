@@ -1,10 +1,12 @@
 using MySweeper.InputOutput.Commands;
 using System.Linq;
+using log4net;
 
 namespace MySweeper.Solver
 {
     public class BasicFieldRevealerSolver : ISolver
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(BasicFieldRevealerSolver));
         private CommandFactory CommandFactory { get; set; }
 
         public void SetCommandFactory(CommandFactory factory)
@@ -14,6 +16,8 @@ namespace MySweeper.Solver
 
         public SolveResult Solve(Game g)
         {
+            Logger.DebugFormat("Solving game [{0}] with solver [{1}].", g, nameof(BasicFieldRevealerSolver));
+
             var revealedFields = g.Minefield.Where(x => x.IsRevealed).Select(x => new FieldWithNeighbourhood(x, g.Minefield));
             var fieldsWithHiddenNeighbours = revealedFields.Where(x => x.Neighbours.Any(n => !n.IsRevealed));
             var revealableFields = fieldsWithHiddenNeighbours.Where(AllBombsMarked).ToList();

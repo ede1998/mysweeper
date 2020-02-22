@@ -13,7 +13,7 @@ namespace MySweeper.Basic
 
         public override string ToString()
         {
-            return $"X: [{this.X}], Y: [{this.Y}]";
+            return $"Coordinate({this.X},{this.Y})";
         }
 
         public override bool Equals(object obj)
