@@ -11,8 +11,9 @@ namespace MySweeper
         public Minefield Minefield { get; }
         public List<ICommand> ExecutedCommands { get; }
 
-        public bool GameLost => this.Minefield.Any(x => x.MineExploded);
-        public bool GameWon => this.Minefield.All(x => (x.BombMarked && x.HasMine) ^ x.IsRevealed);
+        public bool IsLost => this.Minefield.Any(x => x.MineExploded);
+        public bool IsWon => this.Minefield.All(x => (x.BombMarked && x.HasMine) ^ x.IsRevealed);
+        public bool IsFinished => this.IsLost || this.IsWon;
 
         public Game()
         {

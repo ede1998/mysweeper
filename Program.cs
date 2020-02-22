@@ -24,16 +24,17 @@ namespace MySweeper
                 var solvers = new SolverSequence
                 {
                     new StartSolver(),
-                    new BasicMineMarkerSolver(),
-                    new BasicFieldRevealerSolver(),
-                    new BasicMineMarkerSolver(),
-                    new BasicFieldRevealerSolver(),
+                    new SolverSequence(true)
+                    {
+                        new BasicMineMarkerSolver(),
+                        new BasicFieldRevealerSolver()
+                    }
                 };
                 solvers.SetCommandFactory(new CommandFactory(game.Minefield));
                 solvers.Solve(game);
             }
 
-            while (!game.GameLost && !game.GameWon)
+            while (!game.IsFinished)
             {
                 io.TerminalPrinter.PrintMinefield();
                 var input = io.TerminalReader.ReadGameInput();
@@ -46,11 +47,11 @@ namespace MySweeper
                 game.Execute(input);
             }
 
-            if (game.GameWon)
+            if (game.IsWon)
             {
                 io.TerminalPrinter.PrintGameWon();
             }
-            else if (game.GameLost)
+            else if (game.IsLost)
             {
                 game.RevealAll();
                 io.TerminalPrinter.PrintGameLost();

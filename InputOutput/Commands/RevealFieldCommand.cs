@@ -13,7 +13,7 @@ namespace MySweeper.InputOutput.Commands
 
         public override void Execute()
         {
-            Logger.DebugFormat("Revealing field [{0}}.", this.Coordinate);
+            Logger.DebugFormat("Revealing field [{0}].", this.Coordinate);
             var field = this.Minefield.GetValue(this.Coordinate);
             field.IsRevealed = true;
             this.RevealedCoordinates.Add(this.Coordinate);

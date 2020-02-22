@@ -28,7 +28,7 @@ namespace MySweeper.Solver
                 g.Execute(command);
             }
 
-            return revealableFields.Any() ? SolveResult.Rerun : SolveResult.Done;
+            return revealableFields.Any() ? SolveResult.Rerun : SolveResult.NothingToDo;
         }
 
         private static bool AllBombsMarked(FieldWithNeighbourhood field)
